@@ -1,2 +1,4 @@
 # Mammo-CGAN
-Tumor injection tools for mammographic scans
+Tumor injection tool for mammographic scans
+
+
