@@ -10,7 +10,6 @@ from keras.optimizers import Adam
 import tensorflow as tf
 import keras.backend.tensorflow_backend as ktf
 from keras.losses import mse
-import cv2
 
 def get_session():
     gpu_options = tf.GPUOptions(allow_growth=True)
@@ -21,37 +20,32 @@ ktf.set_session(get_session())
 
 class Trainer:
     def __init__(self, data_path, model_path=os.path.abspath(__file__)[0:-11], d_learning_rate=0.00002,
-                 g_learning_rate=0.00002, l1_weight=1, adversarial_weight=50):
+                 g_learning_rate=0.00002, metric_weight=1, adversarial_weight=50):
         self.img_shape = (64, 64, 1)
         self.data_path = data_path
         self.model_path = model_path
         self.data_loader = load_data.data_reader(data_path)
         self.data_loader.create_training_data()
         self.norm_size = self.data_loader.norm_size
-        self.d_learning_rate = d_learning_rate
-        self.g_learning_rate = g_learning_rate
-        self.l1_weight = l1_weight
-        self.adversarial_weight = adversarial_weight
-
         self.generator = self.build_generator()
         # self.generator.summary()
         self.discriminator = self.build_discriminator()
         # self.discriminator.summary()
-        self.discriminator.compile(loss=mse, optimizer=Adam(self.d_learning_rate, beta_1=0.5), metrics=['accuracy'])
+        self.discriminator.compile(loss=mse, optimizer=Adam(d_learning_rate, beta_1=0.5), metrics=['accuracy'])
 
         ## building of combain model
         # img_a: input image img_b: conditioning image
         img_A = Input(shape=self.img_shape)
         img_B = Input(shape=self.img_shape)
 
-        fake_A=self.generator(img_B)
+        fake_A= self.generator(img_B)
 
         self.discriminator.trainable = False
 
         valid = self.discriminator([fake_A, img_B])
         self.combined = Model(inputs=[img_A, img_B], outputs=[valid, fake_A])
-        self.combined.compile(loss=['mse', 'mae'], loss_weights=[self.adversarial_weight, self.l1_weight],
-                              optimizer=Adam(self.g_learning_rate, beta_1=0.5))
+        self.combined.compile(loss=['mse', 'mae'], loss_weights=[adversarial_weight, metric_weight],
+                              optimizer=Adam(g_learning_rate, beta_1=0.5))
 
     def build_generator(self):
         def deconve(layer_input, skip_input, filters, dropout_rate):
