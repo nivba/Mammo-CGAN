@@ -36,7 +36,7 @@ class Trainer_layer2:
         self.discriminator.compile(loss=mse, optimizer=Adam(d_learning_rate, beta_1=0.5), metrics=['accuracy'])
 
         ## building of combain model
-        # img_a: input image img_b: conditioning image
+        # img_a: input image, img_b: conditioning image img_c:noisy image
         img_D = Input(shape=self.img_shape)
         img_B = Input(shape=self.img_shape)
         img_C = Input(shape=self.img_shape)
@@ -52,6 +52,7 @@ class Trainer_layer2:
         self.combined.compile(loss=['mse', 'mae'], loss_weights=[g_adversarial_weight, g_metric_weight],
                               optimizer=Adam(g_learning_rate, beta_1=0.5))
     def build_generator(self):
+        # U-NET architecture
         def deconve(layer_input, skip_input, filters, dropout_rate):
             f_size = 4
             u = UpSampling2D(size=2)(layer_input)
