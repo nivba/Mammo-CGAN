@@ -8,7 +8,7 @@ My training data set consists 2880 images augmented from 36 images of tumors mar
 
 Tumor injection steps:
 1. Crooping a square of an healthy tissue from a mammogram image.
-2. Resizing the square to be 64x64 pixels.
+2. Resizing the square to 64x64 pixels.
 3. Conditioning the Image by zeroing the middel (44X44 pixel).
 4. Feeding the condition image to the first GAN.
 5. Feeding the first GAN output as input to the second GAN.
