@@ -1,7 +1,6 @@
 # Mammo-CGAN
 Tumor injection tool for mammographic scans.
 
-This project is still on progress, First working example: https://www.youtube.com/watch?v=5sGZoZa4FY4
 
 #
 My training data set consists 2880 images augmented from 36 images of tumors marked by a specialist radiologist
