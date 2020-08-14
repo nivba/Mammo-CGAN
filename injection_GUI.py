@@ -288,7 +288,7 @@ class Inj_GUI(tkinter.Frame):
             dis_arr[n - 1 - i, i:n - i] = distance
             dis_arr[i:n - i, i] = distance
             dis_arr[i:n - i, n - 1 - i] = distance
-        dis_arr = dis_arr / n
+        dis_arr = dis_arr / (n//2)
         return dis_arr
 
     def generante_weight_matrix(self, n, x, th, smooting, deg):
